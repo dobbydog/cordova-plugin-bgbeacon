@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="com.hinohunomi.bgbeacon"
+        version="0.1.0">
+    <name>BgBeaconPlugin</name>
+    <description>Cordova Background iBeacon Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,background,ibeacon,beacon</keywords>
+
+    <engines>
+      <engine name="cordova-android" version=">=4.0.0" />
+    </engines>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BgBeacon" >
+                <param name="android-package" value="com.hinohunomi.bgbeacon.BgBeacon"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service android:name="com.hinohunomi.bgbeacon.BeaconService" android:exported="false"/>
+            <receiver android:name="com.hinohunomi.bgbeacon.StartupReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                </intent-filter>
+            </receiver>
+<!--
+Configure
+-->
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.SmallIcon" android:value="icon" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.ContentTitle" android:value="Enter iBeacon reagion!" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.Intent.packageName" android:value="com.app.packagename" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.Intent.className" android:value="com.app.packagename.MainActivity" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Server.Url" android:value="http://www.server.com/api/beacon.json" />
+<!--
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.SmallIcon" android:value="17301598" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.SmallIcon.defType" android:value="drawable" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.Color" android:value="0" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.Ticker" android:value="Ticker" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.ContentTitle" android:value="ContentTitle" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.ContentText" android:value="ContentText" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.Intent.packageName" android:value="com.example.app" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Notification.Intent.className" android:value="com.example.app.MainActivity" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Server.Url" android:value="http://www.example.com/api/beacon.json" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Server.ConnectTimeout" android:value="10000" />
+            <meta-data android:name="com.hinohunomi.bgbeacon.Server.ReadTimeout" android:value="30000" />
+-->
+        </config-file>
+
+        <source-file src="src/android/BeaconService.java" target-dir="src/com/hinohunomi/bgbeacon" />
+        <source-file src="src/android/BgBeacon.java" target-dir="src/com/hinohunomi/bgbeacon" />
+        <source-file src="src/android/Config.java" target-dir="src/com/hinohunomi/bgbeacon" />
+        <source-file src="src/android/MetaData.java" target-dir="src/com/hinohunomi/bgbeacon" />
+        <source-file src="src/android/StartupReceiver.java" target-dir="src/com/hinohunomi/bgbeacon" />
+
+<!-- 
+It is assumed for use with cordova-plugin-ibeacon.
+cordova-plugin-ibeacon
+https://github.com/petermetz/cordova-plugin-ibeacon
+
+To comment out the altbeacon.jar to become a duplication error
+-->
+<!--
+        <source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
+-->
+<!--
+To use the support-v4 in accordance with the notification plugin.
+
+Cordova Local-Notification Plugin
+https://github.com/katzer/cordova-plugin-local-notifications
+-->
+        <framework src="com.android.support:support-v4:+" value="gradle" />
+    </platform>
+
+</plugin>
