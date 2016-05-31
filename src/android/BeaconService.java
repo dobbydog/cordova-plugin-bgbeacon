@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
@@ -15,6 +16,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -62,6 +64,12 @@ public class BeaconService extends Service {
 
         //Config
         config.loadMetaData(this);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean disableNotifications =  pref.getBoolean("com.hinohunomi.bgbeacon.disableNotifications", false);
+        if (disableNotifications) {
+            Log.d(TAG, "disableNotifications");
+            return;
+        }
 
         //Thread
         HandlerThread thread = new HandlerThread("ServiceWorkThread",
