@@ -124,7 +124,9 @@ public class BeaconService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        mActionHandler.sendEmptyMessage(ActionHandler.ACT_BEACON_DISABLE);
+        if (mActionHandler != null) {
+            mActionHandler.sendEmptyMessage(ActionHandler.ACT_BEACON_DISABLE);
+        }
         return mBinder;
     }
     @Override
@@ -139,8 +141,10 @@ public class BeaconService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        unregisterReceiver(broadcastReceiver);
-        mActionHandler.abortBeacon();
+        if (mActionHandler != null) {
+            unregisterReceiver(broadcastReceiver);
+            mActionHandler.abortBeacon();
+        }
     }
 
     private final class ActionHandler extends Handler implements BootstrapNotifier {
